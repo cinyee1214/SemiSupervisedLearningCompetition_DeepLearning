@@ -1,0 +1,21 @@
+The query framework we used is uncertainty sampling. In this framework, we query the images which the classifier is least certain how to label. The advantage of this approach is it's simple to implement and straightforward for probabilistic learning models. For image classification tasks, we can select the 12800 most uncertain inputs (i.e. the hardest or the most informative inputs for our trained classifier) by analyzing the posterior probability of all 512000 unlabeled images for each class. In this way, the key for this query strategy is the criterion for evaluating the uncertainty for each image. 
+
+There are several ways to evaluate the uncertainty. The most intuitive one that we come up with is querying the instance whose prediction is the least confident, i.e. x = argmax(1 - P(y|x)). However, we think this strategy is most suitable for classification problems with not too many labels and should not be applied to this 800-class image classification problem, since the least confident strategy only considers information about the most probable label and information about the remaining label distribution are totally thrown away.
+
+To correct for this, we also tried a different multi-class uncertainty variant called margin sampling. Margin sampling aims to correct for a shortcoming in least confident strategy, by incorporating the posterior of the second most likely label, i.e. x = argmax(P(y1|x) - P(y2|x)). Images with small margins are ambiguous and regarded to be hard inputs for our model, thus knowing the true label would help the model discriminate more effectively between them. However, for this image classification task with very large label sets, the margin approach still ignores much of the output distribution for the remaining classes.
+
+Finally we chose the well-known Entropy-based sampling active learning for our model to measure uncertainty and get the indices of the 12800 unlabeled images.
+
+H(x) = -sum(Pk log(Pk)), where Pk is the probability of the sample belonging to the k-th class. 
+The closer the distribution to uniform, the larger the entropy. So we chose the first 12800 images with the largest entropies as the most uncertain samples.
+
+The reasons why we choose entropy:
+1. Compared with other methods, the formula of entropy is relatively simple which can save the calculation consumption.
+2. Entropy is used to describe the degree of chaos in a system and a relatively stable system will spontaneously decrease its entropy. Therefore, it is a very suitable method for feature selection.
+
+Steps:
+1. Interpret the scores from the model: Put the 512,000 unlabeled images into the trained classifier model to get the output tensor of torch.Size([512000, 800]).
+2. Convert the model output into confidences (Probabilities): use softmax to get the corresponding probabilities of each class for each image.
+3. Get the uncertainty score: Calculate the entropy for each image.
+4. Rank the predictions by the uncertainty score: Sort the images by entropy descendingly.
+5. Least Confidence sampling: Get the first 12800 image indices.
