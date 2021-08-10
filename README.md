@@ -1,13 +1,13 @@
 # Final Competition of Deep Learning 2021
 
 ## Overview
-This is a  competition in which we will  compete  with  our  classmates  on  who  can find the best self/semi-supervised learning algorithm. We are given a dataset with a large amount of unlabeled data and a small amount of labeled data to train the model, and the final performance of our model will be evaluated ona hidden test set and posted on a public leaderboard.
+This is a  competition in which we will  compete  with  our  classmates  on  who  can find the best self/semi-supervised learning algorithm. We are given a dataset with a large amount of unlabeled data and a small amount of labeled data to train the model, and the final performance of our model will be evaluated on a hidden test set and posted on a public leaderboard.
 
 ## Dataset
 The dataset, of color images of size 96×96, that has the following structure:
-- 512, 000 unlabeled images,
-- 25, 600 labeled training images (32 examples, 800 classes),
-- 25, 600 labeled validation images (32 examples, 800 classes).
+- 512,000 unlabeled images,
+- 25,600 labeled training images (32 examples, 800 classes),
+- 25,600 labeled validation images (32 examples, 800 classes).
 
 ---
 
